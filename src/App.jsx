@@ -11,9 +11,10 @@ const OPENSEA_LINK = '';
 const TOTAL_MINT_COUNT = 50;
 
 const App = () => {
-      const CONTRACT_ADDRESS = "0x97c06A42770d52dF03C83944e3d989fe21fF8E2F";
+  const CONTRACT_ADDRESS = "0x97c06A42770d52dF03C83944e3d989fe21fF8E2F";
   // state var to store user's public wallet
   const [currentAccount, setCurrentAccount] = useState("");
+  const [loading, setLoading] = useState(false);
   
   const checkIfWalletIsConnected = async () => {
     // make sure have access to window.ethereum
@@ -86,11 +87,13 @@ const App = () => {
 
         console.log("Going to pop wallet now to pay gas...");
         let nftTxn = await connectedContract.makeAnEpicNFT();
+        setLoading(true);
 
         console.log("Mining... please wait");
         await nftTxn.wait();
 
         console.log(`Mined, see transaction : https://goerli.etherscan.io/tx/${nftTxn.hash}`);
+        setLoading(false);
       }
       else {
         console.log("Ethereum object does not exist!");
@@ -135,6 +138,25 @@ const App = () => {
     </button>
   );
 
+  const renderMintUI = () => (
+    // if (loading) {
+    //   <button disabled className="cta-button connect-wallet-button">
+    //     Loading...
+    //   </button>
+    // } 
+    // else {
+      <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
+        Mint NFT
+      </button>
+    // }
+  )
+
+  const renderLoadingUI = () => (
+    <button disabled className="cta-button connect-wallet-button">
+      Loading...
+    </button>
+  )
+
   // this runs during page load
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -148,13 +170,7 @@ const App = () => {
           <p className="sub-text">
             Each unique. Each beautiful. Discover your NFT today.
           </p>
-          {currentAccount === "" ? (
-            renderNotConnectedContainer()
-          ) : (
-            <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
-              Mint NFT
-            </button>
-          )}
+          {currentAccount === "" ? renderNotConnectedContainer() : renderMintUI()}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
