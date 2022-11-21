@@ -5,13 +5,11 @@ import twitterLogo from './assets/twitter-logo.svg';
 import myEpicNft from './utils/MyEpicNFT.json';
 
 // Constants
-const TWITTER_HANDLE = '_buildspace';
-const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
-const OPENSEA_LINK = '';
+const OPENSEA_LINK = 'https://testnets.opensea.io/collection/squarenft-q2p4brem7n';
 const TOTAL_MINT_COUNT = 50;
 
 const App = () => {
-  const CONTRACT_ADDRESS = "0x97c06A42770d52dF03C83944e3d989fe21fF8E2F";
+  const CONTRACT_ADDRESS = "0xF1Ea0f00E6f9178246f1fB9D6A3C0697b435eE25";
   // state var to store user's public wallet
   const [currentAccount, setCurrentAccount] = useState("");
   const [loading, setLoading] = useState(false);
@@ -132,31 +130,32 @@ const App = () => {
   };
   
   // Render Methods
+  // in JS, => is considered as "return"  
+  // here we use "()" to indicate we are returning HTML
   const renderNotConnectedContainer = () => (
     <button onClick={connectWallet} className="cta-button connect-wallet-button">
       Connect to Wallet
     </button>
   );
 
-  const renderMintUI = () => (
-    // if (loading) {
-    //   <button disabled className="cta-button connect-wallet-button">
-    //     Loading...
-    //   </button>
-    // } 
-    // else {
-      <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
-        Mint NFT
-      </button>
-    // }
-  )
-
-  const renderLoadingUI = () => (
-    <button disabled className="cta-button connect-wallet-button">
-      Loading...
-    </button>
-  )
-
+  // use "{}" if need to use some vars before return HTML
+  const renderMintUI = () => {
+    if (loading) { // loading animation when mining
+      return (
+        <button disabled className="cta-button connect-wallet-button">
+          Loading...
+        </button>
+      )
+    }
+    else {
+      return (
+        <button onClick={askContractToMintNft} className="cta-button connect-wallet-button">
+          Mint NFT
+        </button>
+      )
+    }
+  };
+  
   // this runs during page load
   useEffect(() => {
     checkIfWalletIsConnected();
@@ -173,13 +172,12 @@ const App = () => {
           {currentAccount === "" ? renderNotConnectedContainer() : renderMintUI()}
         </div>
         <div className="footer-container">
-          <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
           <a
             className="footer-text"
-            href={TWITTER_LINK}
+            href={OPENSEA_LINK}
             target="_blank"
             rel="noreferrer"
-          >{`built on @${TWITTER_HANDLE}`}</a>
+          >🌊 View Collection on OpenSea</a>
         </div>
       </div>
     </div>
