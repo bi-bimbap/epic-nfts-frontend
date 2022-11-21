@@ -45,7 +45,7 @@ const App = () => {
 
   const connectWallet = async () => {
     try {
-      // const goerliChainId = "0x5"; // hex code of Goerli network chain ID
+      const goerliChainId = "0x5"; // hex code of Goerli network chain ID
       const { ethereum } = window;
 
       if (!ethereum) {
@@ -53,29 +53,21 @@ const App = () => {
         return;
       }
 
-      // request access to account
-      const accounts = await ethereum.request({ method: "eth_requestAccounts"});
+      let chainId = await ethereum.request({ method: 'eth_chainId' });
+      console.log("Connected to chain " + chainId);
 
-      // print public addr once authorize MetaMask
-      console.log("Connected", accounts[0]);
-      setCurrentAccount(accounts[0]);
-      setupEventListener();
+      if (chainId == goerliChainId) {
+        // request access to account
+        const accounts = await ethereum.request({ method: "eth_requestAccounts"});
 
-      // let chainId = await ethereum.request({ method: 'eth_chainId' });
-      // console.log("Connected to chain " + chainId);
-
-      // if (chainId == goerliChainId) {
-      //   // request access to account
-      //   const accounts = await ethereum.request({ method: "eth_requestAccounts"});
-
-      //   // print public addr once authorize MetaMask
-      //   console.log("Connected", accounts[0]);
-      //   setCurrentAccount(accounts[0]);
-      //   setupEventListener();
-      // }
-      // else {
-      // 	alert("You are not connected to the Goerli Test Network!");
-      // }
+        // print public addr once authorize MetaMask
+        console.log("Connected", accounts[0]);
+        setCurrentAccount(accounts[0]);
+        setupEventListener();
+      }
+      else {
+      	alert("You are not connected to the Goerli Test Network!");
+      }
     }
     catch (error) {
       console.log(error);
